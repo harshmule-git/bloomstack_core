@@ -1,4 +1,21 @@
 /* global frappe, erpnext, _ */
+let item_categories = [
+	"Flower", 
+	"Flower (packaged - each)", 
+	"Flower (packaged eighth - each)",
+	"Flower (packaged gram - each)", 
+	"Flower (packaged half ounce - each)", 
+	"Flower (packaged ounce - each)", 
+	"Flower (packaged quarter - each)",
+	"Fresh Cannabis Plant", 
+	"Immature Plant", 
+	"Kief", 
+	"Leaf", 
+	"Pre-Roll Flower", 
+	"Pre-Roll Leaf", 
+	"Seeds", 
+	"Seeds (each)"
+]
 
 frappe.ui.form.on('Item', {
 	onload: (frm) => {
@@ -44,6 +61,10 @@ frappe.ui.form.on('Item', {
 		frm.trigger("toggle_metrc_fields_display");
 	},
 
+	metrc_item_category: (frm) => {
+		frm.trigger("toggle_metrc_fields_display");
+	},
+
 	toggle_metrc_fields_display: (frm) => {
 		if (frm.doc.metrc_uom) {
 			frappe.db.get_value("Compliance UOM", { "name": frm.doc.metrc_uom }, "quantity_type", (r) => {
@@ -52,6 +73,9 @@ frappe.ui.form.on('Item', {
 					frm.toggle_display("metrc_unit_uom", r.quantity_type === "CountBased");
 				}
 			});
+		}
+		if (frm.doc.metrc_item_category) {
+			frm.toggle_display("strain_name", item_categories.includes(frm.doc.metrc_item_category));
 		}
 	},
 
